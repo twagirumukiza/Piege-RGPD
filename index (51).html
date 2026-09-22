@@ -1,0 +1,1353 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Les principaux pièges à éviter dans la mise en conformité RGPD</title>
+  <meta name="description" content="Guide structuré des pièges à éviter pour une conformité RGPD durable : documentation, gouvernance, maîtrise des risques et culture interne.">
+  <meta property="og:title" content="Les principaux pièges à éviter dans la mise en conformité RGPD">
+  <meta property="og:description" content="Guide structuré : Documentation, Gouvernance, Maîtrise des risques, Culture interne.">
+  <meta property="og:type" content="article">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --pink: #F8C8DC;
+      --pink-soft: #FDE8F0;
+      --lime: #C5E063;
+      --lime-dark: #A8C94A;
+      --cream: #FDF8F0;
+      --brown: #3D2B1F;
+      --brown-soft: #5C4033;
+      --white: #FFFFFF;
+      --card-bg: #FFFBF5;
+      --nav-bg: rgba(253, 248, 240, 0.94);
+      --shadow: rgba(61, 43, 31, 0.08);
+      --trap-bg: #FDE8E8;
+      --trap-border: #E07A7A;
+      --do-bg: #F0F8D0;
+      --font-scale: 1;
+    }
+
+    [data-theme="dark"] {
+      --pink: #4A2C3A;
+      --pink-soft: #3A2430;
+      --lime: #8BA83A;
+      --lime-dark: #A8C94A;
+      --cream: #1A1614;
+      --brown: #F5EDE4;
+      --brown-soft: #D4C4B0;
+      --white: #2A2420;
+      --card-bg: #2A2420;
+      --nav-bg: rgba(26, 22, 20, 0.95);
+      --shadow: rgba(0, 0, 0, 0.35);
+      --trap-bg: #3D2828;
+      --trap-border: #C07070;
+      --do-bg: #2E3A20;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      color: var(--brown);
+      background: var(--cream);
+      line-height: 1.65;
+      font-size: calc(17px * var(--font-scale));
+      transition: background 0.3s, color 0.3s;
+    }
+
+    h1, h2, h3, h4 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-weight: 800;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+    }
+
+    a { color: var(--brown); text-decoration: underline; text-underline-offset: 3px; }
+    a:hover { opacity: 0.8; }
+
+    /* ========== TOOLBAR ========== */
+    .toolbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 200;
+      background: var(--nav-bg);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--shadow);
+      padding: 0.55rem 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      transition: background 0.3s;
+    }
+
+    .toolbar-left {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .toolbar-right {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .logo {
+      font-weight: 800;
+      font-size: 0.95rem;
+      text-decoration: none;
+      color: var(--brown);
+      white-space: nowrap;
+    }
+
+    .tool-btn {
+      background: var(--white);
+      border: 1px solid var(--shadow);
+      color: var(--brown);
+      padding: 0.4rem 0.7rem;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.15s;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      font-family: inherit;
+    }
+
+    .tool-btn:hover { transform: translateY(-1px); background: var(--pink-soft); }
+    .tool-btn.active { background: var(--lime); border-color: var(--lime-dark); }
+
+    .lang-group, .theme-group, .font-group, .share-group {
+      display: flex;
+      gap: 0.25rem;
+      align-items: center;
+    }
+
+    .font-group span {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--brown-soft);
+      padding: 0 0.2rem;
+    }
+
+    /* Burger */
+    .burger {
+      display: none;
+      width: 40px;
+      height: 40px;
+      background: var(--white);
+      border: 1px solid var(--shadow);
+      border-radius: 10px;
+      cursor: pointer;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      padding: 0;
+    }
+
+    .burger span {
+      display: block;
+      width: 18px;
+      height: 2px;
+      background: var(--brown);
+      border-radius: 2px;
+      transition: 0.25s;
+    }
+
+    .burger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .burger.open span:nth-child(2) { opacity: 0; }
+    .burger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    /* Mobile menu */
+    .mobile-menu {
+      display: none;
+      position: fixed;
+      top: 56px;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: var(--cream);
+      z-index: 190;
+      padding: 1.5rem;
+      overflow-y: auto;
+      transition: background 0.3s;
+    }
+
+    .mobile-menu.open { display: block; }
+
+    .mobile-menu a {
+      display: block;
+      padding: 0.85rem 1rem;
+      text-decoration: none;
+      color: var(--brown);
+      font-weight: 600;
+      border-radius: 10px;
+      margin-bottom: 0.35rem;
+      background: var(--white);
+      border: 1px solid var(--shadow);
+    }
+
+    .mobile-menu a:hover { background: var(--pink-soft); }
+    .mobile-menu .menu-section {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--brown-soft);
+      margin: 1.25rem 0 0.5rem;
+      padding-left: 0.25rem;
+    }
+
+    /* Desktop nav links (hidden on small) */
+    .desktop-nav {
+      display: flex;
+      gap: 1.1rem;
+      list-style: none;
+      font-size: 0.85rem;
+      font-weight: 500;
+    }
+
+    .desktop-nav a {
+      text-decoration: none;
+      color: var(--brown-soft);
+    }
+
+    .desktop-nav a:hover { color: var(--brown); }
+
+    /* ========== HERO ========== */
+    .hero {
+      background: var(--pink);
+      padding: 5.5rem 1.5rem 4.5rem;
+      margin-top: 52px;
+      transition: background 0.3s;
+    }
+
+    .hero-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      align-items: center;
+    }
+
+    .hero-title {
+      font-size: clamp(2.4rem, 5vw, 3.8rem);
+      color: var(--brown);
+      margin-bottom: 1.15rem;
+    }
+
+    .hero-lead {
+      font-size: 1.1rem;
+      max-width: 420px;
+      margin-bottom: 1.6rem;
+      color: var(--brown-soft);
+    }
+
+    .hero-cta {
+      display: inline-block;
+      background: var(--brown);
+      color: var(--cream);
+      padding: 0.85rem 1.6rem;
+      border-radius: 999px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.95rem;
+      transition: transform 0.2s, background 0.2s;
+    }
+
+    .hero-cta:hover {
+      transform: translateY(-2px);
+      background: var(--brown-soft);
+      color: var(--cream);
+    }
+
+    .hero-badge {
+      display: inline-block;
+      background: var(--lime);
+      color: var(--brown);
+      font-size: 0.8rem;
+      font-weight: 700;
+      padding: 0.35rem 0.9rem;
+      border-radius: 999px;
+      margin-bottom: 1.15rem;
+      letter-spacing: 0.03em;
+    }
+
+    [data-theme="dark"] .hero-badge { color: #1A1614; }
+
+    .hero-visual {
+      background: var(--white);
+      border-radius: 1.5rem;
+      padding: 2rem;
+      box-shadow: 0 20px 50px var(--shadow);
+      transition: background 0.3s;
+    }
+
+    .hero-visual h3 { font-size: 1.3rem; margin-bottom: 1.15rem; }
+
+    .dim-list { list-style: none; display: flex; flex-direction: column; gap: 0.7rem; }
+
+    .dim-list li {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      font-weight: 600;
+      font-size: 1.05rem;
+    }
+
+    .dim-num {
+      width: 36px;
+      height: 36px;
+      background: var(--lime);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 0.95rem;
+      flex-shrink: 0;
+      color: #1A1614;
+    }
+
+    /* ========== INTRO ========== */
+    .intro {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 4rem 1.5rem 2.5rem;
+      text-align: center;
+    }
+
+    .intro p {
+      font-size: 1.1rem;
+      color: var(--brown-soft);
+      margin-bottom: 1.15rem;
+    }
+
+    .intro strong { color: var(--brown); }
+
+    /* ========== SECTIONS ========== */
+    .section { padding: 3.75rem 1.5rem; transition: background 0.3s; }
+
+    .section-inner { max-width: 1000px; margin: 0 auto; }
+
+    .section-header { margin-bottom: 2.5rem; }
+
+    .section-number {
+      display: inline-block;
+      background: var(--brown);
+      color: var(--cream);
+      font-size: 0.85rem;
+      font-weight: 700;
+      padding: 0.3rem 0.85rem;
+      border-radius: 999px;
+      margin-bottom: 0.8rem;
+      letter-spacing: 0.04em;
+    }
+
+    .section-title {
+      font-size: clamp(1.9rem, 3.8vw, 2.6rem);
+      margin-bottom: 0.8rem;
+    }
+
+    .section-lead {
+      font-size: 1.05rem;
+      color: var(--brown-soft);
+      max-width: 640px;
+    }
+
+    .bg-pink { background: var(--pink-soft); }
+    .bg-lime { background: color-mix(in srgb, var(--lime) 35%, var(--cream)); }
+    .bg-cream { background: var(--cream); }
+    .bg-brown { background: var(--brown); color: var(--cream); }
+    .bg-brown .section-title,
+    .bg-brown .section-lead,
+    .bg-brown h3,
+    .bg-brown p,
+    .bg-brown li { color: var(--cream); }
+    .bg-brown .section-number { background: var(--lime); color: #1A1614; }
+
+    /* ========== CARDS ========== */
+    .card-grid { display: grid; gap: 1.4rem; }
+
+    .card {
+      background: var(--white);
+      border-radius: 1.25rem;
+      padding: 1.65rem 1.75rem;
+      box-shadow: 0 8px 28px var(--shadow);
+      transition: background 0.3s, box-shadow 0.3s;
+    }
+
+    .card h3 {
+      font-size: 1.2rem;
+      margin-bottom: 0.7rem;
+      display: flex;
+      align-items: baseline;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .card-num {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #1A1614;
+      background: var(--lime);
+      padding: 0.15rem 0.5rem;
+      border-radius: 6px;
+    }
+
+    .card p {
+      color: var(--brown-soft);
+      margin-bottom: 0.75rem;
+    }
+
+    .card p:last-child { margin-bottom: 0; }
+
+    .card .do {
+      background: var(--do-bg);
+      border-left: 4px solid var(--lime-dark);
+      padding: 0.8rem 1rem;
+      border-radius: 0 10px 10px 0;
+      margin-top: 0.9rem;
+      font-size: 0.95rem;
+      color: var(--brown);
+    }
+
+    .card .trap {
+      background: var(--trap-bg);
+      border-left: 4px solid var(--trap-border);
+      padding: 0.8rem 1rem;
+      border-radius: 0 10px 10px 0;
+      margin-top: 0.8rem;
+      font-size: 0.95rem;
+      color: var(--brown);
+    }
+
+    /* ========== TABLE ========== */
+    .table-wrap {
+      overflow-x: auto;
+      margin: 1.75rem 0;
+      border-radius: 1rem;
+      box-shadow: 0 8px 28px var(--shadow);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--white);
+    }
+
+    th, td {
+      padding: 1rem 1.25rem;
+      text-align: left;
+      border-bottom: 1px solid var(--shadow);
+    }
+
+    th {
+      background: var(--brown);
+      color: var(--cream);
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+
+    tr:last-child td { border-bottom: none; }
+    td:first-child { font-weight: 600; width: 28%; }
+
+    /* ========== CYCLE ========== */
+    .cycle {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.55rem;
+      justify-content: center;
+      margin: 1.75rem 0;
+    }
+
+    .cycle-item {
+      background: var(--white);
+      color: var(--brown);
+      padding: 0.65rem 1.1rem;
+      border-radius: 999px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      box-shadow: 0 4px 14px var(--shadow);
+    }
+
+    .cycle-arrow {
+      display: flex;
+      align-items: center;
+      color: var(--lime-dark);
+      font-weight: 700;
+      font-size: 1.15rem;
+    }
+
+    /* ========== CONCLUSION ========== */
+    .conclusion {
+      background: var(--pink);
+      padding: 4rem 1.5rem;
+      transition: background 0.3s;
+    }
+
+    .conclusion-inner {
+      max-width: 800px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .conclusion h2 {
+      font-size: clamp(1.8rem, 3.3vw, 2.4rem);
+      margin-bottom: 1.4rem;
+    }
+
+    .conclusion p {
+      font-size: 1.05rem;
+      margin-bottom: 1.1rem;
+      color: var(--brown-soft);
+    }
+
+    .conclusion .highlight {
+      background: var(--white);
+      border-radius: 1.25rem;
+      padding: 1.65rem 1.85rem;
+      margin: 1.75rem 0;
+      text-align: left;
+      box-shadow: 0 10px 32px var(--shadow);
+    }
+
+    .conclusion .highlight p { margin-bottom: 0.7rem; }
+    .conclusion .highlight p:last-child { margin-bottom: 0; }
+
+    /* ========== SHARE BAR (bottom sticky on mobile) ========== */
+    .share-bar {
+      display: none;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--nav-bg);
+      backdrop-filter: blur(12px);
+      border-top: 1px solid var(--shadow);
+      padding: 0.65rem 1rem;
+      z-index: 180;
+      justify-content: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    /* ========== FOOTER ========== */
+    footer {
+      background: var(--brown);
+      color: var(--cream);
+      padding: 2.25rem 1.5rem;
+      text-align: center;
+      font-size: 0.9rem;
+    }
+
+    footer a { color: var(--lime); }
+
+    /* ========== RESPONSIVE ========== */
+    @media (max-width: 900px) {
+      .desktop-nav { display: none; }
+      .burger { display: flex; }
+      .hero-inner { grid-template-columns: 1fr; gap: 2.25rem; }
+      .card-grid.two { grid-template-columns: 1fr; }
+      .cycle { flex-direction: column; align-items: center; }
+      .cycle-arrow { transform: rotate(90deg); }
+      .share-bar { display: flex; }
+      body { padding-bottom: 60px; }
+      .toolbar-right .share-group { display: none; }
+    }
+
+    @media (min-width: 700px) {
+      .card-grid.two { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (max-width: 600px) {
+      .toolbar { flex-wrap: wrap; }
+      .tool-btn { padding: 0.35rem 0.55rem; font-size: 0.75rem; }
+      .logo { font-size: 0.85rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ========== TOOLBAR ========== -->
+  <div class="toolbar">
+    <div class="toolbar-left">
+      <button class="burger" id="burger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+      <a href="#" class="logo" data-i18n="logo">RGPD · Guide</a>
+      <ul class="desktop-nav">
+        <li><a href="#documentation" data-i18n="nav1">1. Documentation</a></li>
+        <li><a href="#gouvernance" data-i18n="nav2">2. Gouvernance</a></li>
+        <li><a href="#risques" data-i18n="nav3">3. Risques</a></li>
+        <li><a href="#culture" data-i18n="nav4">4. Culture</a></li>
+        <li><a href="#conclusion" data-i18n="nav5">Conclusion</a></li>
+      </ul>
+    </div>
+
+    <div class="toolbar-right">
+      <!-- Langues -->
+      <div class="lang-group">
+        <button class="tool-btn active" data-lang="fr" title="Français">FR</button>
+        <button class="tool-btn" data-lang="en" title="English">EN</button>
+        <button class="tool-btn" data-lang="zh" title="中文">中文</button>
+      </div>
+
+      <!-- Thème -->
+      <div class="theme-group">
+        <button class="tool-btn" id="themeBtn" title="Mode sombre / clair">
+          <span id="themeIcon">🌙</span>
+        </button>
+      </div>
+
+      <!-- Taille caractères -->
+      <div class="font-group">
+        <button class="tool-btn" id="fontMinus" title="Réduire">A−</button>
+        <span>A</span>
+        <button class="tool-btn" id="fontPlus" title="Agrandir">A+</button>
+      </div>
+
+      <!-- Partage desktop -->
+      <div class="share-group">
+        <button class="tool-btn" onclick="share('twitter')" title="X / Twitter">𝕏</button>
+        <button class="tool-btn" onclick="share('linkedin')" title="LinkedIn">in</button>
+        <button class="tool-btn" onclick="share('facebook')" title="Facebook">f</button>
+        <button class="tool-btn" onclick="share('whatsapp')" title="WhatsApp">wa</button>
+        <button class="tool-btn" onclick="share('copy')" title="Copier le lien">🔗</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile menu -->
+  <div class="mobile-menu" id="mobileMenu">
+    <div class="menu-section" data-i18n="menuMain">Sections principales</div>
+    <a href="#intro" data-i18n="menuIntro">Introduction</a>
+    <a href="#documentation" data-i18n="menu1">01 — Documentation</a>
+    <a href="#gouvernance" data-i18n="menu2">02 — Gouvernance</a>
+    <a href="#risques" data-i18n="menu3">03 — Maîtrise des risques</a>
+    <a href="#culture" data-i18n="menu4">04 — Culture interne</a>
+    <a href="#synthese" data-i18n="menu5">05 — Synthèse des 4 dimensions</a>
+    <a href="#piege" data-i18n="menu6">06 — Le véritable piège</a>
+    <a href="#amelioration" data-i18n="menu7">07 — Amélioration continue</a>
+    <a href="#conclusion" data-i18n="menu8">Conclusion</a>
+
+    <div class="menu-section" data-i18n="menuDetail">Détail des points</div>
+    <a href="#s1-1">1.1 — Projet one-shot</a>
+    <a href="#s1-2">1.2 — Registre des traitements</a>
+    <a href="#s1-3">1.3 — Politiques génériques</a>
+    <a href="#s1-4">1.4 — Documenter les décisions</a>
+    <a href="#s2-1">2.1 — Responsabilités</a>
+    <a href="#s2-2">2.2 — Sous-traitants</a>
+    <a href="#s2-3">2.3 — Transferts internationaux</a>
+    <a href="#s2-4">2.4 — Projet isolé</a>
+    <a href="#s3-1">3.1 — Collecte excessive</a>
+    <a href="#s3-2">3.2 — Bases légales</a>
+    <a href="#s3-3">3.3 — Durées de conservation</a>
+    <a href="#s3-4">3.4 — Sécurité</a>
+    <a href="#s3-5">3.5 — AIPD</a>
+    <a href="#s3-6">3.6 — Violations de données</a>
+    <a href="#s3-7">3.7 — Droits des personnes</a>
+    <a href="#s4-1">4.1 — Formation</a>
+    <a href="#s4-2">4.2 — Contrainte juridique</a>
+    <a href="#s4-3">4.3 — Culture de signalement</a>
+    <a href="#s4-4">4.4 — Cookies &amp; traceurs</a>
+  </div>
+
+  <!-- Share bar mobile -->
+  <div class="share-bar">
+    <button class="tool-btn" onclick="share('twitter')">𝕏</button>
+    <button class="tool-btn" onclick="share('linkedin')">in</button>
+    <button class="tool-btn" onclick="share('facebook')">f</button>
+    <button class="tool-btn" onclick="share('whatsapp')">wa</button>
+    <button class="tool-btn" onclick="share('copy')">🔗</button>
+  </div>
+
+  <!-- ========== HERO ========== -->
+  <header class="hero">
+    <div class="hero-inner">
+      <div>
+        <span class="hero-badge" data-i18n="badge">Référentiel pratique</span>
+        <h1 class="hero-title" data-i18n="heroTitle">Les principaux pièges à éviter dans la mise en conformité RGPD</h1>
+        <p class="hero-lead" data-i18n="heroLead">
+          Une démarche continue qui repose sur quatre dimensions complémentaires.
+          La conformité ne se limite pas à produire des documents.
+        </p>
+        <a href="#intro" class="hero-cta" data-i18n="heroCta">Découvrir le guide</a>
+      </div>
+      <div class="hero-visual">
+        <h3 data-i18n="dimTitle">Les 4 dimensions</h3>
+        <ul class="dim-list">
+          <li><span class="dim-num">1</span> <span data-i18n="dim1">Documentation</span></li>
+          <li><span class="dim-num">2</span> <span data-i18n="dim2">Gouvernance</span></li>
+          <li><span class="dim-num">3</span> <span data-i18n="dim3">Maîtrise des risques</span></li>
+          <li><span class="dim-num">4</span> <span data-i18n="dim4">Culture interne</span></li>
+        </ul>
+      </div>
+    </div>
+  </header>
+
+  <!-- ========== INTRO ========== -->
+  <section class="intro" id="intro">
+    <p data-i18n="intro1">
+      La mise en conformité au <strong>Règlement général sur la protection des données (RGPD)</strong> n’est pas un projet ponctuel.
+      C’est une démarche continue qui repose sur quatre dimensions complémentaires.
+    </p>
+    <p data-i18n="intro2">
+      Une organisation peut disposer d’une politique de confidentialité parfaitement rédigée et rester exposée si ses traitements ne sont pas correctement cartographiés,
+      si ses sous-traitants ne sont pas maîtrisés, si les droits des personnes ne sont pas effectivement traités ou si les collaborateurs ne sont pas sensibilisés.
+    </p>
+    <p data-i18n="intro3">
+      <strong>La conformité RGPD ne consiste donc pas uniquement à produire des documents.</strong>
+      Elle consiste à connaître ses traitements, définir les responsabilités, maîtriser les risques et être capable de démontrer les mesures mises en œuvre.
+    </p>
+  </section>
+
+  <!-- ========== 1. DOCUMENTATION ========== -->
+  <section class="section bg-cream" id="documentation">
+    <div class="section-inner">
+      <div class="section-header">
+        <span class="section-number">01</span>
+        <h2 class="section-title" data-i18n="s1Title">Documentation</h2>
+        <p class="section-lead" data-i18n="s1Lead">
+          Ne pas confondre documents et conformité. La documentation constitue le socle de l’accountability,
+          mais elle doit correspondre aux pratiques réelles de l’organisation.
+        </p>
+      </div>
+
+      <div class="card-grid two">
+        <article class="card" id="s1-1">
+          <h3><span class="card-num">1.1</span> <span data-i18n="s1-1t">Traiter la conformité comme un projet « one-shot »</span></h3>
+          <p data-i18n="s1-1p1">Considérer la conformité RGPD comme un projet qui commence par un audit, se poursuit avec la rédaction de documents et se termine lorsque les actions ont été réalisées.</p>
+          <p data-i18n="s1-1p2">Or l’organisation évolue en permanence : nouveaux outils, nouveaux fournisseurs, nouveaux collaborateurs, nouveaux traitements, nouvelles finalités, nouvelles technologies.</p>
+          <div class="do"><strong data-i18n="todo">À faire :</strong> <span data-i18n="s1-1do">instaurer une revue régulière de la conformité et intégrer la protection des données dans les processus de changement.</span></div>
+        </article>
+
+        <article class="card" id="s1-2">
+          <h3><span class="card-num">1.2</span> <span data-i18n="s1-2t">Négliger le registre des activités de traitement</span></h3>
+          <p data-i18n="s1-2p1">Le registre prévu par l’article 30 du RGPD constitue un élément central. Certains registres restent incomplets, trop génériques ou déconnectés de la réalité opérationnelle.</p>
+          <p data-i18n="s1-2p2">Des intitulés tels que « RH », « Marketing » ou « Clients » ne permettent pas d’identifier précisément les traitements.</p>
+          <div class="do"><strong data-i18n="todo">À faire :</strong> <span data-i18n="s1-2do">construire le registre avec les équipes métiers et techniques et le mettre à jour régulièrement.</span></div>
+        </article>
+
+        <article class="card" id="s1-3">
+          <h3><span class="card-num">1.3</span> <span data-i18n="s1-3t">Rédiger des politiques de confidentialité génériques</span></h3>
+          <p data-i18n="s1-3p1">Une politique copiée-collée ne garantit pas la transparence. Les personnes doivent comprendre quelles données sont collectées, pourquoi, sur quelle base, combien de temps, avec qui, et quels sont leurs droits.</p>
+          <div class="trap"><strong data-i18n="trap">Le piège :</strong> <span data-i18n="s1-3trap">produire un document juridiquement complexe mais difficilement compréhensible.</span></div>
+          <div class="do"><strong data-i18n="todo">À faire :</strong> <span data-i18n="s1-3do">adapter l’information au contexte réel de chaque traitement et de chaque canal de collecte.</span></div>
+        </article>
+
+        <article class="card" id="s1-4">
+          <h3><span class="card-num">1.4</span> <span data-i18n="s1-4t">Oublier de documenter les décisions</span></h3>
+          <p data-i18n="s1-4p1">Pourquoi cette base légale ? Pourquoi cette durée de conservation ? Pourquoi cette donnée est-elle nécessaire ? Pourquoi ce fournisseur a-t-il été retenu ? Pourquoi une AIPD a-t-elle été réalisée ou non ?</p>
+          <div class="do"><strong data-i18n="todo">À faire :</strong> <span data-i18n="s1-4do">conserver non seulement les documents, mais également les éléments permettant de comprendre les décisions prises.</span></div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 2. GOUVERNANCE ========== -->
+  <section class="section bg-pink" id="gouvernance">
+    <div class="section-inner">
+      <div class="section-header">
+        <span class="section-number">02</span>
+        <h2 class="section-title" data-i18n="s2Title">Gouvernance</h2>
+        <p class="section-lead" data-i18n="s2Lead">Personne ne peut être conforme tout seul. Le RGPD implique direction, métiers, DPO, juridique, achats, RH, informatique, cybersécurité et fournisseurs.</p>
+      </div>
+
+      <div class="card-grid two">
+        <article class="card" id="s2-1">
+          <h3><span class="card-num">2.1</span> <span data-i18n="s2-1t">Ne pas définir clairement les responsabilités</span></h3>
+          <p data-i18n="s2-1p1">Un piège fréquent : « Le RGPD, c’est le rôle du DPO. » Le DPO conseille, informe et accompagne, mais la responsabilité de la conformité n’est pas transférée.</p>
+          <div class="do"><strong data-i18n="todo">À faire :</strong> <span data-i18n="s2-1do">identifier clairement qui décide des finalités, définit les moyens, gère les traitements, valide les projets, sélectionne les fournisseurs, traite les droits, gère les incidents et maintient la documentation.</span></div>
+        </article>
+
+        <article class="card" id="s2-2">
+          <h3><span class="card-num">2.2</span> <span data-i18n="s2-2t">Sous-estimer les sous-traitants</span></h3>
+          <p data-i18n="s2-2p1">CRM, SaaS, cloud, emailing, analytics, hébergement ou plateformes RH impliquent souvent le traitement de données par des prestataires. L’article 28 encadre la relation.</p>
+          <div class="trap"><strong data-i18n="trap">Le piège :</strong> <span data-i18n="s2-2trap">« Le fournisseur est connu, donc nous pouvons lui faire confiance. »</span></div>
+          <div class="do"><strong data-i18n="todo">À faire :</strong> <span data-i18n="s2-2do">cartographier les sous-traitants et sous-traitants ultérieurs, vérifier les garanties, encadrer contractuellement, examiner les lieux d’hébergement et d’accès.</span></div>
+        </article>
+
+        <article class="card" id="s2-3">
+          <h3><span class="card-num">2.3</span> <span data-i18n="s2-3t">Négliger les transferts internationaux</span></h3>
+          <p data-i18n="s2-3p1">L’utilisation d’un fournisseur établi ou opérant hors de l’Espace économique européen soulève des questions spécifiques.</p>
+          <div class="do"><strong data-i18n="todo">À faire :</strong> <span data-i18n="s2-3do">intégrer les transferts internationaux à la cartographie des traitements et à l’évaluation des fournisseurs.</span></div>
+        </article>
+
+        <article class="card" id="s2-4">
+          <h3><span class="card-num">2.4</span> <span data-i18n="s2-4t">Faire du RGPD un projet isolé</span></h3>
+          <p data-i18n="s2-4p1">Un nouveau logiciel, une acquisition, une externalisation, une campagne marketing ou un nouveau produit peuvent modifier le périmètre des traitements.</p>
+          <div class="do"><strong data-i18n="todo">À faire :</strong> <span data-i18n="s2-4do">intégrer une analyse RGPD aux processus de gestion de projet, d’achat, de changement et de lancement de nouveaux services.</span></div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 3. MAÎTRISE DES RISQUES ========== -->
+  <section class="section bg-cream" id="risques">
+    <div class="section-inner">
+      <div class="section-header">
+        <span class="section-number">03</span>
+        <h2 class="section-title" data-i18n="s3Title">Maîtrise des risques</h2>
+        <p class="section-lead" data-i18n="s3Lead">Passer de la conformité théorique à la réalité opérationnelle. C’est ici que la conformité RGPD rejoint directement la cybersécurité et la GRC.</p>
+      </div>
+
+      <div class="card-grid two">
+        <article class="card" id="s3-1">
+          <h3><span class="card-num">3.1</span> <span data-i18n="s3-1t">Collecter trop de données</span></h3>
+          <p data-i18n="s3-1p1">Le principe de minimisation impose de limiter les données collectées à ce qui est nécessaire. Pour chaque donnée : pourquoi avons-nous besoin de cette information ?</p>
+          <div class="do"><strong data-i18n="todo">À faire :</strong> <span data-i18n="s3-1do">examiner régulièrement les champs collectés, les données réellement utilisées et les informations pouvant être supprimées ou anonymisées.</span></div>
+        </article>
+
+        <article class="card" id="s3-2">
+          <h3><span class="card-num">3.2</span> <span data-i18n="s3-2t">Ne pas définir correctement les bases légales</span></h3>
+          <p data-i18n="s3-2p1">Chaque traitement doit reposer sur une base légale appropriée (consentement, contrat, obligation légale, intérêts vitaux, mission d’intérêt public, intérêt légitime).</p>
+          <div class="trap"><strong data-i18n="trap">Le piège :</strong> <span data-i18n="s3-2trap">utiliser systématiquement le consentement alors qu’une autre base est plus appropriée.</span></div>
+          <div class="do"><strong data-i18n="todo">À faire :</strong> <span data-i18n="s3-2do">documenter la base légale retenue pour chaque traitement et vérifier sa cohérence avec la finalité.</span></div>
+        </article>
+
+        <article class="card" id="s3-3">
+          <h3><span class="card-num">3.3</span> <span data-i18n="s3-3t">Négliger les durées de conservation</span></h3>
+          <p data-i18n="s3-3p1">Une donnée ne doit pas être conservée indéfiniment. Une bonne gouvernance distingue : Base active → Archivage → Suppression ou anonymisation.</p>
+          <div class="do"><strong data-i18n="todo">À faire :</strong> <span data-i18n="s3-3do">définir des règles de conservation et mettre en place des mécanismes permettant leur application effective.</span></div>
+        </article>
+
+        <article class="card" id="s3-4">
+          <h3><span class="card-num">3.4</span> <span data-i18n="s3-4t">Sous-estimer la sécurité</span></h3>
+          <p data-i18n="s3-4p1">Le RGPD impose des mesures techniques et organisationnelles appropriées : habilitations, authentification, chiffrement, pseudonymisation, sauvegardes, journalisation, résilience, gestion des vulnérabilités.</p>
+          <div class="trap"><strong data-i18n="trap">Le piège :</strong> <span data-i18n="s3-4trap">« Nous avons un antivirus et un pare-feu, donc les données sont sécurisées. »</span></div>
+        </article>
+
+        <article class="card" id="s3-5">
+          <h3><span class="card-num">3.5</span> <span data-i18n="s3-5t">Oublier les AIPD</span></h3>
+          <p data-i18n="s3-5p1">Certains traitements sont susceptibles d’engendrer un risque élevé. L’AIPD doit relier : Traitement → Risques → Mesures → Risque résiduel → Décision.</p>
+          <div class="do"><strong data-i18n="todo">À faire :</strong> <span data-i18n="s3-5do">en faire un véritable outil de gestion des risques plutôt qu’un simple document réglementaire.</span></div>
+        </article>
+
+        <article class="card" id="s3-6">
+          <h3><span class="card-num">3.6</span> <span data-i18n="s3-6t">Ne pas être préparé aux violations de données</span></h3>
+          <p data-i18n="s3-6p1">Une violation peut résulter d’une cyberattaque, d’une erreur humaine, d’un mauvais paramétrage ou d’une transmission erronée. Notification à l’autorité dans les 72 heures lorsque nécessaire.</p>
+          <div class="do"><strong data-i18n="todo">À faire :</strong> <span data-i18n="s3-6do">disposer d’une procédure de gestion des violations et tester régulièrement le dispositif.</span></div>
+        </article>
+
+        <article class="card" id="s3-7" style="grid-column: 1 / -1;">
+          <h3><span class="card-num">3.7</span> <span data-i18n="s3-7t">Négliger la gestion des droits des personnes</span></h3>
+          <p data-i18n="s3-7p1">L’organisation doit être capable de traiter efficacement les demandes d’accès, rectification, effacement, limitation, opposition ou portabilité. Réponse en principe dans un délai d’un mois.</p>
+          <div class="do"><strong data-i18n="todo">À faire :</strong> <span data-i18n="s3-7do">mettre en place une procédure permettant de recevoir, qualifier, traiter et tracer les demandes.</span></div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 4. CULTURE INTERNE ========== -->
+  <section class="section bg-lime" id="culture">
+    <div class="section-inner">
+      <div class="section-header">
+        <span class="section-number">04</span>
+        <h2 class="section-title" data-i18n="s4Title">Culture interne</h2>
+        <p class="section-lead" data-i18n="s4Lead">Transformer les règles en pratiques. Une excellente documentation et des processus parfaitement définis restent fragiles si les collaborateurs ne savent pas comment les appliquer.</p>
+      </div>
+
+      <div class="card-grid two">
+        <article class="card" id="s4-1">
+          <h3><span class="card-num">4.1</span> <span data-i18n="s4-1t">Négliger la formation</span></h3>
+          <p data-i18n="s4-1p1">Les collaborateurs manipulent quotidiennement des données personnelles. Une erreur d’envoi, un partage inapproprié ou un clic frauduleux peuvent contribuer à une violation.</p>
+          <div class="do"><strong data-i18n="todo">À faire :</strong> <span data-i18n="s4-1do">former les nouveaux collaborateurs, organiser des sensibilisations régulières, adapter les formations aux métiers et documenter les actions.</span></div>
+        </article>
+
+        <article class="card" id="s4-2">
+          <h3><span class="card-num">4.2</span> <span data-i18n="s4-2t">Considérer le RGPD comme une contrainte juridique</span></h3>
+          <p data-i18n="s4-2p1">Les équipes métiers doivent comprendre pourquoi certaines pratiques sont nécessaires : conservation limitée, partage contrôlé avec les prestataires, signalement immédiat des erreurs.</p>
+          <div class="do"><strong data-i18n="todo">À faire :</strong> <span data-i18n="s4-2do">expliquer le risque pour que les règles deviennent plus facilement applicables.</span></div>
+        </article>
+
+        <article class="card" id="s4-3">
+          <h3><span class="card-num">4.3</span> <span data-i18n="s4-3t">Ne pas créer de culture de signalement</span></h3>
+          <p data-i18n="s4-3p1">Un collaborateur qui constate une erreur doit pouvoir la signaler rapidement sans la dissimuler. Une erreur détectée rapidement peut être contenue.</p>
+          <div class="do"><strong data-i18n="todo">À faire :</strong> <span data-i18n="s4-3do">favoriser le cycle Détection → Signalement → Qualification → Réponse → Retour d’expérience.</span></div>
+        </article>
+
+        <article class="card" id="s4-4">
+          <h3><span class="card-num">4.4</span> <span data-i18n="s4-4t">Négliger les cookies, traceurs et pratiques numériques</span></h3>
+          <p data-i18n="s4-4p1">Les sites web, applications, outils marketing et solutions d’analyse utilisent des cookies ou traceurs soumis à des règles spécifiques.</p>
+          <div class="trap"><strong data-i18n="trap">Le piège :</strong> <span data-i18n="s4-4trap">considérer qu’un simple bandeau d’information suffit dans toutes les situations.</span></div>
+          <div class="do"><strong data-i18n="todo">À faire :</strong> <span data-i18n="s4-4do">identifier les traceurs, déterminer les règles applicables et vérifier les mécanismes de consentement.</span></div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 5. SYNTHÈSE ========== -->
+  <section class="section bg-cream" id="synthese">
+    <div class="section-inner">
+      <div class="section-header">
+        <span class="section-number">05</span>
+        <h2 class="section-title" data-i18n="s5Title">Les quatre dimensions doivent fonctionner ensemble</h2>
+        <p class="section-lead" data-i18n="s5Lead">Une faiblesse dans une dimension peut fragiliser les autres.</p>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th data-i18n="th1">Dimension</th>
+              <th data-i18n="th2">Question essentielle</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td data-i18n="td1">1. Documentation</td>
+              <td data-i18n="td1q">Sommes-nous capables de démontrer ce que nous faisons ?</td>
+            </tr>
+            <tr>
+              <td data-i18n="td2">2. Gouvernance</td>
+              <td data-i18n="td2q">Savons-nous qui décide et qui est responsable ?</td>
+            </tr>
+            <tr>
+              <td data-i18n="td3">3. Maîtrise des risques</td>
+              <td data-i18n="td3q">Savons-nous quels risques existent et comment les réduire ?</td>
+            </tr>
+            <tr>
+              <td data-i18n="td4">4. Culture interne</td>
+              <td data-i18n="td4q">Les collaborateurs savent-ils quoi faire concrètement ?</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p style="margin-top: 1.4rem; color: var(--brown-soft);" data-i18n="s5p">
+        Un registre parfait ne compense pas une mauvaise gouvernance.
+        Une gouvernance efficace ne compense pas des mesures de sécurité insuffisantes.
+        Une bonne sécurité ne compense pas l’absence de transparence.
+        Et une excellente documentation ne garantit rien si les pratiques quotidiennes ne correspondent pas à ce qui est écrit.
+      </p>
+    </div>
+  </section>
+
+  <!-- ========== 6. LE VÉRITABLE PIÈGE ========== -->
+  <section class="section bg-brown" id="piege">
+    <div class="section-inner">
+      <div class="section-header">
+        <span class="section-number">06</span>
+        <h2 class="section-title" data-i18n="s6Title">Le véritable piège</h2>
+        <p class="section-lead" data-i18n="s6Lead">Confondre conformité documentaire et maîtrise du risque.</p>
+      </div>
+
+      <div style="max-width: 700px;">
+        <p style="font-size: 1.1rem; margin-bottom: 1.15rem;" data-i18n="s6p1">
+          La logique d’accountability impose à l’organisation d’être capable de démontrer le respect de ses obligations.
+        </p>
+        <p style="font-size: 1.1rem; margin-bottom: 1.15rem;" data-i18n="s6p2">
+          La question n’est donc pas simplement :<br>
+          <strong>« Avons-nous les documents nécessaires ? »</strong>
+        </p>
+        <p style="font-size: 1.1rem;" data-i18n="s6p3">
+          Mais plutôt :<br>
+          <strong>« Sommes-nous capables de démontrer que nos traitements sont maîtrisés et que les risques sont effectivement pris en compte ? »</strong>
+        </p>
+        <p style="margin-top: 1.6rem; opacity: 0.9;" data-i18n="s6p4">
+          La conformité documentaire constitue une partie du dispositif.
+          La maîtrise effective des traitements et des risques en constitue l’objectif opérationnel.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 7. AMÉLIORATION CONTINUE ========== -->
+  <section class="section bg-pink" id="amelioration">
+    <div class="section-inner">
+      <div class="section-header">
+        <span class="section-number">07</span>
+        <h2 class="section-title" data-i18n="s7Title">Une conformité RGPD inscrite dans l’amélioration continue</h2>
+        <p class="section-lead" data-i18n="s7Lead">Le dispositif doit fonctionner comme un cycle.</p>
+      </div>
+
+      <div class="cycle">
+        <span class="cycle-item" data-i18n="c1">Identifier</span>
+        <span class="cycle-arrow">→</span>
+        <span class="cycle-item" data-i18n="c2">Cartographier</span>
+        <span class="cycle-arrow">→</span>
+        <span class="cycle-item" data-i18n="c3">Évaluer</span>
+        <span class="cycle-arrow">→</span>
+        <span class="cycle-item" data-i18n="c4">Traiter</span>
+        <span class="cycle-arrow">→</span>
+        <span class="cycle-item" data-i18n="c5">Documenter</span>
+        <span class="cycle-arrow">→</span>
+        <span class="cycle-item" data-i18n="c6">Contrôler</span>
+        <span class="cycle-arrow">→</span>
+        <span class="cycle-item" data-i18n="c7">Améliorer</span>
+      </div>
+
+      <p style="text-align: center; max-width: 640px; margin: 1.4rem auto 0; color: var(--brown-soft);" data-i18n="s7p">
+        Cette logique permet de faire du RGPD un véritable dispositif de gouvernance plutôt qu’un simple exercice de conformité.
+      </p>
+    </div>
+  </section>
+
+  <!-- ========== CONCLUSION ========== -->
+  <section class="conclusion" id="conclusion">
+    <div class="conclusion-inner">
+      <h2 data-i18n="concTitle">Conclusion</h2>
+      <p data-i18n="conc1">
+        Une démarche RGPD solide repose sur quatre dimensions complémentaires :
+        <strong>Documentation</strong>, <strong>Gouvernance</strong>, <strong>Maîtrise des risques</strong> et <strong>Culture interne</strong>.
+      </p>
+
+      <div class="highlight">
+        <p data-i18n="concH1"><strong>La documentation</strong> permet de démontrer.</p>
+        <p data-i18n="concH2"><strong>La gouvernance</strong> permet de décider et d’attribuer les responsabilités.</p>
+        <p data-i18n="concH3"><strong>La maîtrise des risques</strong> permet de protéger réellement les personnes et les données.</p>
+        <p data-i18n="concH4"><strong>La culture interne</strong> permet de transformer les règles en pratiques quotidiennes.</p>
+      </div>
+
+      <p data-i18n="conc2">
+        Les sanctions financières prévues par le RGPD constituent un risque important :
+        pour certaines violations, elles peuvent atteindre <strong>20 millions d’euros ou 4 % du chiffre d’affaires annuel mondial</strong>,
+        le montant le plus élevé étant retenu.
+      </p>
+      <p data-i18n="conc3">
+        Mais le risque ne se limite pas à l’amende. Une mauvaise maîtrise des données peut également avoir
+        des conséquences opérationnelles, contractuelles, commerciales ou réputationnelles.
+      </p>
+      <p data-i18n="conc4">
+        <strong>Être conforme ne consiste pas seulement à avoir les bons documents.</strong>
+        C’est être capable de démontrer que les bonnes pratiques sont réellement appliquées,
+        que les risques sont maîtrisés et que l’organisation sait s’adapter lorsqu’elle évolue.
+      </p>
+    </div>
+  </section>
+
+  <footer>
+    <p data-i18n="footer1">Guide pratique · Conformité RGPD · Documentation · Gouvernance · Risques · Culture interne</p>
+    <p style="margin-top: 0.45rem; opacity: 0.7;" data-i18n="footer2">Contenu structuré pour une approche GRC et accountability</p>
+    <p style="margin-top: 1.1rem; font-size: 0.95rem;">
+      <span data-i18n="footerSig">Par</span>
+      <strong>Twagirumukiza</strong>
+      ·
+      <a href="https://fr.linkedin.com/in/innocent-twagirumukiza" target="_blank" rel="noopener noreferrer" style="color: var(--lime); text-decoration: none; font-weight: 600;">
+        LinkedIn ↗
+      </a>
+    </p>
+  </footer>
+
+  <script>
+    // ========== TRANSLATIONS ==========
+    const translations = {
+      fr: {
+        logo: "RGPD · Guide",
+        nav1: "1. Documentation", nav2: "2. Gouvernance", nav3: "3. Risques", nav4: "4. Culture", nav5: "Conclusion",
+        menuMain: "Sections principales", menuIntro: "Introduction",
+        menu1: "01 — Documentation", menu2: "02 — Gouvernance", menu3: "03 — Maîtrise des risques",
+        menu4: "04 — Culture interne", menu5: "05 — Synthèse des 4 dimensions", menu6: "06 — Le véritable piège",
+        menu7: "07 — Amélioration continue", menu8: "Conclusion", menuDetail: "Détail des points",
+        badge: "Référentiel pratique",
+        heroTitle: "Les principaux pièges à éviter dans la mise en conformité RGPD",
+        heroLead: "Une démarche continue qui repose sur quatre dimensions complémentaires. La conformité ne se limite pas à produire des documents.",
+        heroCta: "Découvrir le guide",
+        dimTitle: "Les 4 dimensions", dim1: "Documentation", dim2: "Gouvernance", dim3: "Maîtrise des risques", dim4: "Culture interne",
+        intro1: "La mise en conformité au <strong>Règlement général sur la protection des données (RGPD)</strong> n’est pas un projet ponctuel. C’est une démarche continue qui repose sur quatre dimensions complémentaires.",
+        intro2: "Une organisation peut disposer d’une politique de confidentialité parfaitement rédigée et rester exposée si ses traitements ne sont pas correctement cartographiés, si ses sous-traitants ne sont pas maîtrisés, si les droits des personnes ne sont pas effectivement traités ou si les collaborateurs ne sont pas sensibilisés.",
+        intro3: "<strong>La conformité RGPD ne consiste donc pas uniquement à produire des documents.</strong> Elle consiste à connaître ses traitements, définir les responsabilités, maîtriser les risques et être capable de démontrer les mesures mises en œuvre.",
+        todo: "À faire :", trap: "Le piège :",
+        s1Title: "Documentation", s1Lead: "Ne pas confondre documents et conformité. La documentation constitue le socle de l’accountability, mais elle doit correspondre aux pratiques réelles de l’organisation.",
+        "s1-1t": "Traiter la conformité comme un projet « one-shot »", "s1-1p1": "Considérer la conformité RGPD comme un projet qui commence par un audit, se poursuit avec la rédaction de documents et se termine lorsque les actions ont été réalisées.", "s1-1p2": "Or l’organisation évolue en permanence : nouveaux outils, nouveaux fournisseurs, nouveaux collaborateurs, nouveaux traitements, nouvelles finalités, nouvelles technologies.", "s1-1do": "instaurer une revue régulière de la conformité et intégrer la protection des données dans les processus de changement.",
+        "s1-2t": "Négliger le registre des activités de traitement", "s1-2p1": "Le registre prévu par l’article 30 du RGPD constitue un élément central. Certains registres restent incomplets, trop génériques ou déconnectés de la réalité opérationnelle.", "s1-2p2": "Des intitulés tels que « RH », « Marketing » ou « Clients » ne permettent pas d’identifier précisément les traitements.", "s1-2do": "construire le registre avec les équipes métiers et techniques et le mettre à jour régulièrement.",
+        "s1-3t": "Rédiger des politiques de confidentialité génériques", "s1-3p1": "Une politique copiée-collée ne garantit pas la transparence. Les personnes doivent comprendre quelles données sont collectées, pourquoi, sur quelle base, combien de temps, avec qui, et quels sont leurs droits.", "s1-3trap": "produire un document juridiquement complexe mais difficilement compréhensible.", "s1-3do": "adapter l’information au contexte réel de chaque traitement et de chaque canal de collecte.",
+        "s1-4t": "Oublier de documenter les décisions", "s1-4p1": "Pourquoi cette base légale ? Pourquoi cette durée de conservation ? Pourquoi cette donnée est-elle nécessaire ? Pourquoi ce fournisseur a-t-il été retenu ? Pourquoi une AIPD a-t-elle été réalisée ou non ?", "s1-4do": "conserver non seulement les documents, mais également les éléments permettant de comprendre les décisions prises.",
+        s2Title: "Gouvernance", s2Lead: "Personne ne peut être conforme tout seul. Le RGPD implique direction, métiers, DPO, juridique, achats, RH, informatique, cybersécurité et fournisseurs.",
+        "s2-1t": "Ne pas définir clairement les responsabilités", "s2-1p1": "Un piège fréquent : « Le RGPD, c’est le rôle du DPO. » Le DPO conseille, informe et accompagne, mais la responsabilité de la conformité n’est pas transférée.", "s2-1do": "identifier clairement qui décide des finalités, définit les moyens, gère les traitements, valide les projets, sélectionne les fournisseurs, traite les droits, gère les incidents et maintient la documentation.",
+        "s2-2t": "Sous-estimer les sous-traitants", "s2-2p1": "CRM, SaaS, cloud, emailing, analytics, hébergement ou plateformes RH impliquent souvent le traitement de données par des prestataires. L’article 28 encadre la relation.", "s2-2trap": "« Le fournisseur est connu, donc nous pouvons lui faire confiance. »", "s2-2do": "cartographier les sous-traitants et sous-traitants ultérieurs, vérifier les garanties, encadrer contractuellement, examiner les lieux d’hébergement et d’accès.",
+        "s2-3t": "Négliger les transferts internationaux", "s2-3p1": "L’utilisation d’un fournisseur établi ou opérant hors de l’Espace économique européen soulève des questions spécifiques.", "s2-3do": "intégrer les transferts internationaux à la cartographie des traitements et à l’évaluation des fournisseurs.",
+        "s2-4t": "Faire du RGPD un projet isolé", "s2-4p1": "Un nouveau logiciel, une acquisition, une externalisation, une campagne marketing ou un nouveau produit peuvent modifier le périmètre des traitements.", "s2-4do": "intégrer une analyse RGPD aux processus de gestion de projet, d’achat, de changement et de lancement de nouveaux services.",
+        s3Title: "Maîtrise des risques", s3Lead: "Passer de la conformité théorique à la réalité opérationnelle. C’est ici que la conformité RGPD rejoint directement la cybersécurité et la GRC.",
+        "s3-1t": "Collecter trop de données", "s3-1p1": "Le principe de minimisation impose de limiter les données collectées à ce qui est nécessaire. Pour chaque donnée : pourquoi avons-nous besoin de cette information ?", "s3-1do": "examiner régulièrement les champs collectés, les données réellement utilisées et les informations pouvant être supprimées ou anonymisées.",
+        "s3-2t": "Ne pas définir correctement les bases légales", "s3-2p1": "Chaque traitement doit reposer sur une base légale appropriée (consentement, contrat, obligation légale, intérêts vitaux, mission d’intérêt public, intérêt légitime).", "s3-2trap": "utiliser systématiquement le consentement alors qu’une autre base est plus appropriée.", "s3-2do": "documenter la base légale retenue pour chaque traitement et vérifier sa cohérence avec la finalité.",
+        "s3-3t": "Négliger les durées de conservation", "s3-3p1": "Une donnée ne doit pas être conservée indéfiniment. Une bonne gouvernance distingue : Base active → Archivage → Suppression ou anonymisation.", "s3-3do": "définir des règles de conservation et mettre en place des mécanismes permettant leur application effective.",
+        "s3-4t": "Sous-estimer la sécurité", "s3-4p1": "Le RGPD impose des mesures techniques et organisationnelles appropriées : habilitations, authentification, chiffrement, pseudonymisation, sauvegardes, journalisation, résilience, gestion des vulnérabilités.", "s3-4trap": "« Nous avons un antivirus et un pare-feu, donc les données sont sécurisées. »",
+        "s3-5t": "Oublier les AIPD", "s3-5p1": "Certains traitements sont susceptibles d’engendrer un risque élevé. L’AIPD doit relier : Traitement → Risques → Mesures → Risque résiduel → Décision.", "s3-5do": "en faire un véritable outil de gestion des risques plutôt qu’un simple document réglementaire.",
+        "s3-6t": "Ne pas être préparé aux violations de données", "s3-6p1": "Une violation peut résulter d’une cyberattaque, d’une erreur humaine, d’un mauvais paramétrage ou d’une transmission erronée. Notification à l’autorité dans les 72 heures lorsque nécessaire.", "s3-6do": "disposer d’une procédure de gestion des violations et tester régulièrement le dispositif.",
+        "s3-7t": "Négliger la gestion des droits des personnes", "s3-7p1": "L’organisation doit être capable de traiter efficacement les demandes d’accès, rectification, effacement, limitation, opposition ou portabilité. Réponse en principe dans un délai d’un mois.", "s3-7do": "mettre en place une procédure permettant de recevoir, qualifier, traiter et tracer les demandes.",
+        s4Title: "Culture interne", s4Lead: "Transformer les règles en pratiques. Une excellente documentation et des processus parfaitement définis restent fragiles si les collaborateurs ne savent pas comment les appliquer.",
+        "s4-1t": "Négliger la formation", "s4-1p1": "Les collaborateurs manipulent quotidiennement des données personnelles. Une erreur d’envoi, un partage inapproprié ou un clic frauduleux peuvent contribuer à une violation.", "s4-1do": "former les nouveaux collaborateurs, organiser des sensibilisations régulières, adapter les formations aux métiers et documenter les actions.",
+        "s4-2t": "Considérer le RGPD comme une contrainte juridique", "s4-2p1": "Les équipes métiers doivent comprendre pourquoi certaines pratiques sont nécessaires : conservation limitée, partage contrôlé avec les prestataires, signalement immédiat des erreurs.", "s4-2do": "expliquer le risque pour que les règles deviennent plus facilement applicables.",
+        "s4-3t": "Ne pas créer de culture de signalement", "s4-3p1": "Un collaborateur qui constate une erreur doit pouvoir la signaler rapidement sans la dissimuler. Une erreur détectée rapidement peut être contenue.", "s4-3do": "favoriser le cycle Détection → Signalement → Qualification → Réponse → Retour d’expérience.",
+        "s4-4t": "Négliger les cookies, traceurs et pratiques numériques", "s4-4p1": "Les sites web, applications, outils marketing et solutions d’analyse utilisent des cookies ou traceurs soumis à des règles spécifiques.", "s4-4trap": "considérer qu’un simple bandeau d’information suffit dans toutes les situations.", "s4-4do": "identifier les traceurs, déterminer les règles applicables et vérifier les mécanismes de consentement.",
+        s5Title: "Les quatre dimensions doivent fonctionner ensemble", s5Lead: "Une faiblesse dans une dimension peut fragiliser les autres.",
+        th1: "Dimension", th2: "Question essentielle",
+        td1: "1. Documentation", td1q: "Sommes-nous capables de démontrer ce que nous faisons ?",
+        td2: "2. Gouvernance", td2q: "Savons-nous qui décide et qui est responsable ?",
+        td3: "3. Maîtrise des risques", td3q: "Savons-nous quels risques existent et comment les réduire ?",
+        td4: "4. Culture interne", td4q: "Les collaborateurs savent-ils quoi faire concrètement ?",
+        s5p: "Un registre parfait ne compense pas une mauvaise gouvernance. Une gouvernance efficace ne compense pas des mesures de sécurité insuffisantes. Une bonne sécurité ne compense pas l’absence de transparence. Et une excellente documentation ne garantit rien si les pratiques quotidiennes ne correspondent pas à ce qui est écrit.",
+        s6Title: "Le véritable piège", s6Lead: "Confondre conformité documentaire et maîtrise du risque.",
+        s6p1: "La logique d’accountability impose à l’organisation d’être capable de démontrer le respect de ses obligations.",
+        s6p2: "La question n’est donc pas simplement :<br><strong>« Avons-nous les documents nécessaires ? »</strong>",
+        s6p3: "Mais plutôt :<br><strong>« Sommes-nous capables de démontrer que nos traitements sont maîtrisés et que les risques sont effectivement pris en compte ? »</strong>",
+        s6p4: "La conformité documentaire constitue une partie du dispositif. La maîtrise effective des traitements et des risques en constitue l’objectif opérationnel.",
+        s7Title: "Une conformité RGPD inscrite dans l’amélioration continue", s7Lead: "Le dispositif doit fonctionner comme un cycle.",
+        c1: "Identifier", c2: "Cartographier", c3: "Évaluer", c4: "Traiter", c5: "Documenter", c6: "Contrôler", c7: "Améliorer",
+        s7p: "Cette logique permet de faire du RGPD un véritable dispositif de gouvernance plutôt qu’un simple exercice de conformité.",
+        concTitle: "Conclusion",
+        conc1: "Une démarche RGPD solide repose sur quatre dimensions complémentaires : <strong>Documentation</strong>, <strong>Gouvernance</strong>, <strong>Maîtrise des risques</strong> et <strong>Culture interne</strong>.",
+        concH1: "<strong>La documentation</strong> permet de démontrer.",
+        concH2: "<strong>La gouvernance</strong> permet de décider et d’attribuer les responsabilités.",
+        concH3: "<strong>La maîtrise des risques</strong> permet de protéger réellement les personnes et les données.",
+        concH4: "<strong>La culture interne</strong> permet de transformer les règles en pratiques quotidiennes.",
+        conc2: "Les sanctions financières prévues par le RGPD constituent un risque important : pour certaines violations, elles peuvent atteindre <strong>20 millions d’euros ou 4 % du chiffre d’affaires annuel mondial</strong>, le montant le plus élevé étant retenu.",
+        conc3: "Mais le risque ne se limite pas à l’amende. Une mauvaise maîtrise des données peut également avoir des conséquences opérationnelles, contractuelles, commerciales ou réputationnelles.",
+        conc4: "<strong>Être conforme ne consiste pas seulement à avoir les bons documents.</strong> C’est être capable de démontrer que les bonnes pratiques sont réellement appliquées, que les risques sont maîtrisés et que l’organisation sait s’adapter lorsqu’elle évolue.",
+        footer1: "Guide pratique · Conformité RGPD · Documentation · Gouvernance · Risques · Culture interne",
+        footer2: "Contenu structuré pour une approche GRC et accountability",
+        footerSig: "Par"
+      },
+
+      en: {
+        logo: "GDPR · Guide",
+        nav1: "1. Documentation", nav2: "2. Governance", nav3: "3. Risks", nav4: "4. Culture", nav5: "Conclusion",
+        menuMain: "Main sections", menuIntro: "Introduction",
+        menu1: "01 — Documentation", menu2: "02 — Governance", menu3: "03 — Risk management",
+        menu4: "04 — Internal culture", menu5: "05 — The 4 dimensions together", menu6: "06 — The real trap",
+        menu7: "07 — Continuous improvement", menu8: "Conclusion", menuDetail: "Detailed points",
+        badge: "Practical reference",
+        heroTitle: "Key pitfalls to avoid in GDPR compliance",
+        heroLead: "An ongoing process based on four complementary dimensions. Compliance is not just about producing documents.",
+        heroCta: "Explore the guide",
+        dimTitle: "The 4 dimensions", dim1: "Documentation", dim2: "Governance", dim3: "Risk management", dim4: "Internal culture",
+        intro1: "GDPR compliance is not a one-off project. It is an ongoing process based on four complementary dimensions.",
+        intro2: "An organisation may have a perfectly drafted privacy policy and still be exposed if its processing activities are not properly mapped, if its processors are not controlled, if data subject rights are not effectively handled, or if staff are not trained.",
+        intro3: "<strong>GDPR compliance is therefore not only about producing documents.</strong> It means knowing your processing activities, defining responsibilities, managing risks and being able to demonstrate the measures in place.",
+        todo: "To do:", trap: "The trap:",
+        s1Title: "Documentation", s1Lead: "Do not confuse documents with compliance. Documentation is the foundation of accountability, but it must reflect the organisation’s actual practices.",
+        "s1-1t": "Treating compliance as a one-shot project", "s1-1p1": "Viewing GDPR compliance as a project that starts with an audit, continues with drafting a few documents and ends when the actions have been completed.", "s1-1p2": "Yet the organisation constantly evolves: new tools, new suppliers, new staff, new processing activities, new purposes, new technologies.", "s1-1do": "establish a regular compliance review and integrate data protection into change processes.",
+        "s1-2t": "Neglecting the record of processing activities", "s1-2p1": "The record required by Article 30 GDPR is a central element. Some records remain incomplete, too generic or disconnected from operational reality.", "s1-2p2": "Labels such as “HR”, “Marketing” or “Customers” do not allow precise identification of the processing activities.", "s1-2do": "build the record with business and technical teams and keep it regularly updated.",
+        "s1-3t": "Drafting generic privacy policies", "s1-3p1": "A copy-pasted policy does not guarantee transparency. Individuals must understand what data is collected, why, on what legal basis, for how long, with whom it is shared, and what their rights are.", "s1-3trap": "producing a legally complex document that is hard to understand.", "s1-3do": "adapt the information to the real context of each processing activity and each collection channel.",
+        "s1-4t": "Failing to document decisions", "s1-4p1": "Why this legal basis? Why this retention period? Why is this data necessary? Why was this supplier chosen? Why was a DPIA carried out or considered unnecessary?", "s1-4do": "keep not only the documents, but also the elements that make it possible to understand the decisions taken.",
+        s2Title: "Governance", s2Lead: "No one can be compliant alone. GDPR involves management, business teams, DPO, legal, procurement, HR, IT, cybersecurity and suppliers.",
+        "s2-1t": "Not clearly defining responsibilities", "s2-1p1": "A common trap: “GDPR is the DPO’s job.” The DPO advises, informs and supports, but responsibility for compliance is not transferred.", "s2-1do": "clearly identify who decides purposes, defines means, manages processing, approves projects, selects suppliers, handles rights requests, manages incidents and maintains documentation.",
+        "s2-2t": "Underestimating processors", "s2-2p1": "CRM, SaaS, cloud, emailing, analytics, hosting or HR platforms often involve the processing of personal data by providers. Article 28 frames the relationship.", "s2-2trap": "“The provider is well-known, so we can trust them.”", "s2-2do": "map processors and sub-processors, verify safeguards, formalise contracts, examine hosting and access locations.",
+        "s2-3t": "Neglecting international transfers", "s2-3p1": "Using a provider established or operating outside the EEA raises specific questions.", "s2-3do": "include international transfers in the processing map and supplier assessment.",
+        "s2-4t": "Treating GDPR as an isolated project", "s2-4p1": "A new software, an acquisition, outsourcing, a marketing campaign or a new product can change the scope of processing.", "s2-4do": "integrate a GDPR analysis into project management, procurement, change and new service launch processes.",
+        s3Title: "Risk management", s3Lead: "Moving from theoretical compliance to operational reality. This is where GDPR compliance directly meets cybersecurity and GRC.",
+        "s3-1t": "Collecting too much data", "s3-1p1": "The minimisation principle requires limiting collected data to what is necessary. For each data item: why do we need this information?", "s3-1do": "regularly review collected fields, actually used data and information that can be deleted or anonymised.",
+        "s3-2t": "Not correctly defining legal bases", "s3-2p1": "Each processing activity must rest on an appropriate legal basis (consent, contract, legal obligation, vital interests, public interest, legitimate interests).", "s3-2trap": "systematically using consent when another basis is more appropriate.", "s3-2do": "document the legal basis chosen for each processing activity and check its consistency with the purpose.",
+        "s3-3t": "Neglecting retention periods", "s3-3p1": "Personal data must not be kept indefinitely. Good governance distinguishes: Active base → Archiving → Deletion or anonymisation.", "s3-3do": "define retention rules and put in place mechanisms that ensure they are effectively applied.",
+        "s3-4t": "Underestimating security", "s3-4p1": "GDPR requires appropriate technical and organisational measures: access rights, authentication, encryption, pseudonymisation, backups, logging, resilience, vulnerability management.", "s3-4trap": "“We have an antivirus and a firewall, so the data is secure.”",
+        "s3-5t": "Forgetting DPIAs", "s3-5p1": "Some processing activities are likely to result in a high risk. A DPIA should link: Processing → Risks → Measures → Residual risk → Decision.", "s3-5do": "make it a real risk management tool rather than a mere regulatory document.",
+        "s3-6t": "Not being prepared for data breaches", "s3-6p1": "A breach can result from a cyberattack, human error, misconfiguration or transmission to the wrong recipient. Notification to the authority within 72 hours when required.", "s3-6do": "have a breach management procedure and regularly test the system.",
+        "s3-7t": "Neglecting data subject rights management", "s3-7p1": "The organisation must be able to effectively handle access, rectification, erasure, restriction, objection or portability requests. Response within one month in principle.", "s3-7do": "put in place a procedure to receive, qualify, process and track requests.",
+        s4Title: "Internal culture", s4Lead: "Turning rules into practice. Excellent documentation and perfectly defined processes remain fragile if staff do not know how to apply them.",
+        "s4-1t": "Neglecting training", "s4-1p1": "Staff handle personal data every day. A misdirected email, inappropriate sharing or a click on a fraudulent message can contribute to a breach.", "s4-1do": "train new staff, organise regular awareness sessions, adapt training to roles and document the actions taken.",
+        "s4-2t": "Viewing GDPR as a purely legal constraint", "s4-2p1": "Business teams must understand why certain practices are necessary: limited retention, controlled sharing with providers, immediate reporting of errors.", "s4-2do": "explain the risk so that rules become easier to apply.",
+        "s4-3t": "Not creating a reporting culture", "s4-3p1": "A staff member who notices an error must be able to report it quickly without trying to hide it. An error detected quickly can often be contained.", "s4-3do": "foster the cycle Detection → Reporting → Qualification → Response → Lessons learned.",
+        "s4-4t": "Neglecting cookies, trackers and digital practices", "s4-4p1": "Websites, apps, marketing tools and analytics solutions may use cookies or other trackers subject to specific rules.", "s4-4trap": "assuming that a simple information banner is enough in all situations.", "s4-4do": "identify the trackers used, determine the applicable rules and verify that consent mechanisms meet the requirements.",
+        s5Title: "The four dimensions must work together", s5Lead: "A weakness in one dimension can undermine the others.",
+        th1: "Dimension", th2: "Key question",
+        td1: "1. Documentation", td1q: "Are we able to demonstrate what we do?",
+        td2: "2. Governance", td2q: "Do we know who decides and who is responsible?",
+        td3: "3. Risk management", td3q: "Do we know what risks exist and how to reduce them?",
+        td4: "4. Internal culture", td4q: "Do staff know what to do in practice?",
+        s5p: "A perfect record does not compensate for poor governance. Effective governance does not compensate for insufficient security measures. Good security does not compensate for a lack of transparency. And excellent documentation guarantees nothing if daily practices do not match what is written.",
+        s6Title: "The real trap", s6Lead: "Confusing documentary compliance with risk management.",
+        s6p1: "The accountability principle requires the organisation to be able to demonstrate compliance with its obligations.",
+        s6p2: "The question is therefore not simply:<br><strong>“Do we have the necessary documents?”</strong>",
+        s6p3: "But rather:<br><strong>“Are we able to demonstrate that our processing activities are under control and that risks are effectively taken into account?”</strong>",
+        s6p4: "Documentary compliance is part of the system. Effective control of processing and risks is the operational objective.",
+        s7Title: "GDPR compliance as continuous improvement", s7Lead: "The system must function as a cycle.",
+        c1: "Identify", c2: "Map", c3: "Assess", c4: "Treat", c5: "Document", c6: "Control", c7: "Improve",
+        s7p: "This logic turns GDPR into a real governance system rather than a mere compliance exercise.",
+        concTitle: "Conclusion",
+        conc1: "A solid GDPR approach rests on four complementary dimensions: <strong>Documentation</strong>, <strong>Governance</strong>, <strong>Risk management</strong> and <strong>Internal culture</strong>.",
+        concH1: "<strong>Documentation</strong> makes it possible to demonstrate.",
+        concH2: "<strong>Governance</strong> makes it possible to decide and assign responsibilities.",
+        concH3: "<strong>Risk management</strong> makes it possible to genuinely protect individuals and data.",
+        concH4: "<strong>Internal culture</strong> makes it possible to turn rules into daily practice.",
+        conc2: "The financial sanctions provided for by the GDPR are a significant risk: for certain infringements they can reach <strong>€20 million or 4% of worldwide annual turnover</strong>, whichever is higher.",
+        conc3: "But the risk is not limited to the fine. Poor data management can also have operational, contractual, commercial or reputational consequences.",
+        conc4: "<strong>Being compliant is not just about having the right documents.</strong> It is about being able to demonstrate that good practices are actually applied, that risks are managed and that the organisation knows how to adapt when it evolves.",
+        footer1: "Practical guide · GDPR compliance · Documentation · Governance · Risks · Internal culture",
+        footer2: "Content structured for a GRC and accountability approach",
+        footerSig: "By"
+      },
+
+      zh: {
+        logo: "GDPR · 指南",
+        nav1: "1. 文档", nav2: "2. 治理", nav3: "3. 风险", nav4: "4. 文化", nav5: "结论",
+        menuMain: "主要章节", menuIntro: "引言",
+        menu1: "01 — 文档", menu2: "02 — 治理", menu3: "03 — 风险管理",
+        menu4: "04 — 内部文化", menu5: "05 — 四大维度协同", menu6: "06 — 真正的陷阱",
+        menu7: "07 — 持续改进", menu8: "结论", menuDetail: "详细要点",
+        badge: "实用参考",
+        heroTitle: "GDPR 合规中应避免的主要陷阱",
+        heroLead: "基于四个互补维度的持续过程。合规不仅仅是制作文件。",
+        heroCta: "探索指南",
+        dimTitle: "四大维度", dim1: "文档", dim2: "治理", dim3: "风险管理", dim4: "内部文化",
+        intro1: "GDPR 合规不是一次性项目。它是一个基于四个互补维度的持续过程。",
+        intro2: "组织即使有一份完美起草的隐私政策，如果其处理活动未正确映射、处理者未受控、数据主体权利未得到有效处理，或员工未接受培训，仍可能面临风险。",
+        intro3: "<strong>因此，GDPR 合规不仅仅是制作文件。</strong> 它意味着了解您的处理活动、明确责任、管理风险并能够证明已采取的措施。",
+        todo: "应做：", trap: "陷阱：",
+        s1Title: "文档", s1Lead: "不要将文件与合规混淆。文档是问责制的基础，但必须反映组织的实际做法。",
+        "s1-1t": "将合规视为一次性项目", "s1-1p1": "将 GDPR 合规视为从审计开始、起草几份文件、行动完成后即结束的项目。", "s1-1p2": "然而组织在不断演变：新工具、新供应商、新员工、新处理活动、新目的、新技术。", "s1-1do": "建立定期合规审查，并将数据保护纳入变更流程。",
+        "s1-2t": "忽视处理活动记录", "s1-2p1": "GDPR 第30条要求的记录是核心要素。一些记录仍不完整、过于笼统或与实际运营脱节。", "s1-2p2": "诸如“人力资源”、“营销”或“客户”等标签无法精确识别处理活动。", "s1-2do": "与业务和技术团队共同构建记录并定期更新。",
+        "s1-3t": "起草通用隐私政策", "s1-3p1": "复制粘贴的政策无法保证透明度。个人必须了解收集哪些数据、为何收集、法律依据、保存期限、与谁共享以及其权利。", "s1-3trap": "制作法律上复杂但难以理解的文件。", "s1-3do": "根据每个处理活动和每个收集渠道的实际背景调整信息。",
+        "s1-4t": "未能记录决策", "s1-4p1": "为什么选择这个法律依据？为什么是这个保存期限？为什么需要这些数据？为什么选择这个供应商？为什么进行或不进行 DPIA？", "s1-4do": "不仅保留文件，还保留能够理解所做决策的要素。",
+        s2Title: "治理", s2Lead: "没有人能独自合规。GDPR 涉及管理层、业务团队、DPO、法务、采购、人力资源、IT、网络安全和供应商。",
+        "s2-1t": "未明确界定责任", "s2-1p1": "常见陷阱：“GDPR 是 DPO 的事。” DPO 提供建议、告知和支持，但合规责任并未转移。", "s2-1do": "明确谁决定目的、定义手段、管理处理、批准项目、选择供应商、处理权利请求、管理事件并维护文档。",
+        "s2-2t": "低估处理者", "s2-2p1": "CRM、SaaS、云、邮件营销、分析、托管或人力资源平台通常涉及由提供商处理个人数据。第28条规范了这种关系。", "s2-2trap": "“供应商很有名，所以我们可以信任他们。”", "s2-2do": "映射处理者和再处理者、验证保障措施、正式签订合同、检查托管和访问地点。",
+        "s2-3t": "忽视国际传输", "s2-3p1": "使用在欧洲经济区以外设立或运营的提供商会引发具体问题。", "s2-3do": "将国际传输纳入处理地图和供应商评估。",
+        "s2-4t": "将 GDPR 视为孤立项目", "s2-4p1": "新软件、收购、外包、营销活动或新产品可能改变处理范围。", "s2-4do": "将 GDPR 分析纳入项目管理、采购、变更和新服务发布流程。",
+        s3Title: "风险管理", s3Lead: "从理论合规转向运营现实。这是 GDPR 合规直接与网络安全和 GRC 交汇之处。",
+        "s3-1t": "收集过多数据", "s3-1p1": "最小化原则要求将收集的数据限制在必要范围内。对每项数据：我们为什么需要这些信息？", "s3-1do": "定期审查收集的字段、实际使用的数据以及可以删除或匿名化的信息。",
+        "s3-2t": "未正确定义法律依据", "s3-2p1": "每项处理活动必须基于适当的法律依据（同意、合同、法律义务、重大利益、公共利益、合法利益）。", "s3-2trap": "在其他依据更合适时系统性地使用同意。", "s3-2do": "记录每项处理活动选择的法律依据，并检查其与目的的一致性。",
+        "s3-3t": "忽视保存期限", "s3-3p1": "个人数据不得无限期保存。良好的治理区分：活跃库 → 归档 → 删除或匿名化。", "s3-3do": "定义保存规则并建立确保其有效实施的机制。",
+        "s3-4t": "低估安全", "s3-4p1": "GDPR 要求采取适当的技术和组织措施：访问权限、身份验证、加密、假名化、备份、日志、弹性、漏洞管理。", "s3-4trap": "“我们有防病毒软件和防火墙，所以数据是安全的。”",
+        "s3-5t": "忘记 DPIA", "s3-5p1": "某些处理活动可能导致高风险。DPIA 应连接：处理 → 风险 → 措施 → 剩余风险 → 决策。", "s3-5do": "使其成为真正的风险管理工具，而不仅仅是监管文件。",
+        "s3-6t": "未为数据泄露做好准备", "s3-6p1": "泄露可能源于网络攻击、人为错误、配置错误或发送给错误收件人。在需要时于72小时内通知监管机构。", "s3-6do": "制定泄露管理程序并定期测试系统。",
+        "s3-7t": "忽视数据主体权利管理", "s3-7p1": "组织必须能够有效处理访问、更正、删除、限制、反对或可携带性请求。原则上在一个月内回复。", "s3-7do": "建立接收、定性、处理和跟踪请求的程序。",
+        s4Title: "内部文化", s4Lead: "将规则转化为实践。即使有优秀的文档和完美定义的流程，如果员工不知道如何应用，系统仍然脆弱。",
+        "s4-1t": "忽视培训", "s4-1p1": "员工每天处理个人数据。错误发送的邮件、不当共享或点击欺诈消息都可能导致泄露。", "s4-1do": "培训新员工、组织定期意识提升、根据角色调整培训并记录所采取的行动。",
+        "s4-2t": "将 GDPR 视为纯粹的法律约束", "s4-2p1": "业务团队必须理解某些做法为何必要：有限保存、与提供商受控共享、立即报告错误。", "s4-2do": "解释风险，使规则更易于应用。",
+        "s4-3t": "未建立报告文化", "s4-3p1": "发现错误的员工必须能够快速报告而不试图隐瞒。快速发现的错误往往可以控制。", "s4-3do": "促进 检测 → 报告 → 定性 → 响应 → 经验总结 的循环。",
+        "s4-4t": "忽视 cookie、跟踪器和数字实践", "s4-4p1": "网站、应用、营销工具和分析解决方案可能使用受特定规则约束的 cookie 或其他跟踪器。", "s4-4trap": "认为简单的信息横幅在所有情况下都足够。", "s4-4do": "识别使用的跟踪器、确定适用规则并验证同意机制是否符合要求。",
+        s5Title: "四大维度必须协同运作", s5Lead: "一个维度的弱点可能削弱其他维度。",
+        th1: "维度", th2: "关键问题",
+        td1: "1. 文档", td1q: "我们能否证明我们所做的事情？",
+        td2: "2. 治理", td2q: "我们知道谁做决定、谁负责吗？",
+        td3: "3. 风险管理", td3q: "我们知道存在哪些风险以及如何降低它们吗？",
+        td4: "4. 内部文化", td4q: "员工知道在实践中该怎么做吗？",
+        s5p: "完美的记录无法弥补糟糕的治理。有效的治理无法弥补不足的安全措施。良好的安全无法弥补缺乏透明度。如果日常实践与所写不符，优秀的文档也毫无保证。",
+        s6Title: "真正的陷阱", s6Lead: "将文件合规与风险管理混淆。",
+        s6p1: "问责制原则要求组织能够证明其履行了义务。",
+        s6p2: "因此问题不仅仅是：<br><strong>“我们是否有必要的文件？”</strong>",
+        s6p3: "而是：<br><strong>“我们能否证明我们的处理活动受到控制，并且风险得到有效考虑？”</strong>",
+        s6p4: "文件合规是系统的一部分。对处理活动和风险的有效控制才是运营目标。",
+        s7Title: "将 GDPR 合规纳入持续改进", s7Lead: "系统必须作为一个循环运作。",
+        c1: "识别", c2: "映射", c3: "评估", c4: "处理", c5: "记录", c6: "控制", c7: "改进",
+        s7p: "这种逻辑使 GDPR 成为真正的治理系统，而不仅仅是合规练习。",
+        concTitle: "结论",
+        conc1: "扎实的 GDPR 方法基于四个互补维度：<strong>文档</strong>、<strong>治理</strong>、<strong>风险管理</strong>和<strong>内部文化</strong>。",
+        concH1: "<strong>文档</strong>使证明成为可能。",
+        concH2: "<strong>治理</strong>使决策和分配责任成为可能。",
+        concH3: "<strong>风险管理</strong>使真正保护个人和数据成为可能。",
+        concH4: "<strong>内部文化</strong>使规则转化为日常实践成为可能。",
+        conc2: "GDPR 规定的经济处罚是重大风险：对于某些违规行为，处罚可达到<strong>2000万欧元或全球年营业额的4%</strong>，以较高者为准。",
+        conc3: "但风险不仅限于罚款。糟糕的数据管理还可能产生运营、合同、商业或声誉后果。",
+        conc4: "<strong>合规不仅仅是拥有正确的文件。</strong> 而是能够证明良好实践真正得到应用、风险得到管理，并且组织知道如何在演变时适应。",
+        footer1: "实用指南 · GDPR 合规 · 文档 · 治理 · 风险 · 内部文化",
+        footer2: "为 GRC 和问责制方法结构化的内容",
+        footerSig: "作者"
+      }
+    };
+
+    // ========== LANGUAGE ==========
+    function setLang(lang) {
+      document.documentElement.lang = lang === 'zh' ? 'zh-CN' : lang;
+      const t = translations[lang];
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (t[key] !== undefined) el.innerHTML = t[key];
+      });
+      document.querySelectorAll('[data-lang]').forEach(btn => {
+        btn.classList.toggle('active', btn.getAttribute('data-lang') === lang);
+      });
+      localStorage.setItem('rgpd-lang', lang);
+    }
+
+    document.querySelectorAll('[data-lang]').forEach(btn => {
+      btn.addEventListener('click', () => setLang(btn.getAttribute('data-lang')));
+    });
+
+    // ========== THEME ==========
+    function setTheme(theme) {
+      document.documentElement.setAttribute('data-theme', theme);
+      document.getElementById('themeIcon').textContent = theme === 'dark' ? '☀️' : '🌙';
+      localStorage.setItem('rgpd-theme', theme);
+    }
+
+    document.getElementById('themeBtn').addEventListener('click', () => {
+      const current = document.documentElement.getAttribute('data-theme') || 'light';
+      setTheme(current === 'dark' ? 'light' : 'dark');
+    });
+
+    // ========== FONT SIZE ==========
+    let fontScale = 1;
+    function updateFont() {
+      document.documentElement.style.setProperty('--font-scale', fontScale);
+      localStorage.setItem('rgpd-font', fontScale);
+    }
+    document.getElementById('fontPlus').addEventListener('click', () => {
+      if (fontScale < 1.4) { fontScale = Math.round((fontScale + 0.1) * 10) / 10; updateFont(); }
+    });
+    document.getElementById('fontMinus').addEventListener('click', () => {
+      if (fontScale > 0.8) { fontScale = Math.round((fontScale - 0.1) * 10) / 10; updateFont(); }
+    });
+
+    // ========== BURGER MENU ==========
+    const burger = document.getElementById('burger');
+    const mobileMenu = document.getElementById('mobileMenu');
+    burger.addEventListener('click', () => {
+      burger.classList.toggle('open');
+      mobileMenu.classList.toggle('open');
+    });
+    mobileMenu.querySelectorAll('a').forEach(a => {
+      a.addEventListener('click', () => {
+        burger.classList.remove('open');
+        mobileMenu.classList.remove('open');
+      });
+    });
+
+    // ========== SHARE ==========
+    function share(network) {
+      const url = encodeURIComponent(window.location.href);
+      const title = encodeURIComponent(document.title);
+      const text = encodeURIComponent(document.querySelector('meta[name="description"]').content);
+      let shareUrl = '';
+      switch (network) {
+        case 'twitter':
+          shareUrl = `https://twitter.com/intent/tweet?url=${url}&text=${title}`;
+          break;
+        case 'linkedin':
+          shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${url}`;
+          break;
+        case 'facebook':
+          shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`;
+          break;
+        case 'whatsapp':
+          shareUrl = `https://wa.me/?text=${title}%20${url}`;
+          break;
+        case 'copy':
+          navigator.clipboard.writeText(window.location.href).then(() => {
+            alert(document.documentElement.lang.startsWith('zh') ? '链接已复制' : document.documentElement.lang === 'en' ? 'Link copied' : 'Lien copié');
+          });
+          return;
+      }
+      if (shareUrl) window.open(shareUrl, '_blank', 'noopener,width=600,height=450');
+    }
+
+    // ========== INIT ==========
+    (function init() {
+      const savedLang = localStorage.getItem('rgpd-lang') || 'fr';
+      const savedTheme = localStorage.getItem('rgpd-theme') || 'light';
+      const savedFont = parseFloat(localStorage.getItem('rgpd-font')) || 1;
+      setLang(savedLang);
+      setTheme(savedTheme);
+      fontScale = savedFont;
+      updateFont();
+    })();
+  </script>
+</body>
+</html>
